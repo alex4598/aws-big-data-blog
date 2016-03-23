@@ -126,7 +126,7 @@ def cli_chunksize(size, partcount):
     partSize = computedPartSize
 
     if computedPartSize > maxPartSize:
-        partSize = optionsUploadPartSize
+        partSize = DEFAULT_PART_SIZE
 
     if computedPartSize < MINIMUM_PART_SIZE:
         partSize = MINIMUM_PART_SIZE
