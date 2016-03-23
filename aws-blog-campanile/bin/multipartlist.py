@@ -63,7 +63,7 @@ def main():
             continue
 
         ## Find partsize
-        partsize = campanile.cli_chunksize(int(size))
+        partsize = campanile.cli_chunksize(int(size),partcount)
         if partcount != int(math.ceil(float(size)/partsize)):
             campanile.status("Can't calculate partsize for %s/%s\n" %
                     (args.src, name))
