@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "Create an IAM user for an S3 Migration",
+  "Description" : "Campanile IAM user for S3 bucket copy",
 
   "Parameters" : {
     "Bucket" : {
@@ -111,16 +111,6 @@
   "Outputs" : {
     "User" : {
       "Value" : { "Ref" : "User" }
-    },
-
-    "UserKeyCreateCmd" : {
-      "Description" : "Command to create new access keys and write to .boto. Update the [profile name] accordingly",
-      "Value" : { "Fn::Join" : [ "", [ 
-        "aws iam create-access-key --user-name ", { "Ref" : "User" }, 
-          " --query '{aws_access_key_id:AccessKey.AccessKeyId,",
-          "aws_secret_access_key:AccessKey.SecretAccessKey}' --output text",
-          " | awk '{print \"[profile name]\\naws_access_key_id=\"$1\"\\n",
-          "aws_secret_access_key=\"$2\"\\n\"}' >> .boto" ] ] }
     }
   }
 }
