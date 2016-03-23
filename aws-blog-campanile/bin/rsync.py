@@ -207,6 +207,11 @@ def main():
     rundir = "/%s" % uuid
     print "RunDir: hdfs://%s" % rundir
 
+    src_aws_access_key_id = boto.config.get('profile %s' % args.src_profile, 'aws_access_key_id', None)
+    src_aws_secret_access_key = boto.config.get('profile %s' % args.src_profile, 'aws_secret_access_key', None)
+    dst_aws_access_key_id = boto.config.get('profile %s' % args.dst_profile, 'aws_access_key_id', None)
+    dst_aws_secret_access_key = boto.config.get('profile %s' % args.dst_profile, 'aws_secret_access_key', None)
+
     ## Setup logging 
     logger = logging.getLogger('rsync')
     logger.setLevel(logging.INFO)
@@ -227,9 +232,9 @@ def main():
 
     try:
         src_endpoint = bucket_endpoint(boto.connect_s3(\
-            profile_name=args.src_profile),args.src)
+            src_aws_access_key_id,src_aws_secret_access_key),args.src)
         dst_endpoint = bucket_endpoint(boto.connect_s3(\
-                profile_name=args.dst_profile),args.dst)
+            dst_aws_access_key_id,dst_aws_secret_access_key),args.dst)
     except:
         sys.exit(1)
    

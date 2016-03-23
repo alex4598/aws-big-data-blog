@@ -27,12 +27,16 @@ def main():
             default=boto.s3.connection.NoHostProvided, help='S3 endpoint')
     parser.add_argument('--profile', help='Boto profile used for connection')
     args = parser.parse_args()
+    
+    profile_aws_access_key_id = boto.config.get('profile %s' % args.profile, 'aws_access_key_id', None)
+    profile_aws_secret_access_key = boto.config.get('profile %s' % args.profile, 'aws_secret_access_key', None)
 
     ## S3 Connection
-    bucket = S3Connection(suppress_consec_slashes=False,
-            host=args.endpoint,is_secure=True,
-            profile_name=args.profile).get_bucket(args.bucket)
-
+    bucket = S3Connection(profile_aws_access_key_id, profile_aws_secret_access_key,
+        suppress_consec_slashes=False,
+        host=args.endpoint,is_secure=True,
+        ).get_bucket(args.bucket)
+  
     ## Hadoop Counters
     totalsize = 0
     
