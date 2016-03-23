@@ -43,7 +43,7 @@ DEFAULT_AWS_SEC = 'default'
 # -----------------------------------------------------------------------------
 #  Functions
 # -----------------------------------------------------------------------------
-def bucketlist(name, files, cmd, input, output, lines=1,
+def bucketlist(name, files, cmd, input, output, lines=10,
         debug=False, timeout=300000):
     stepargs = [
         'hadoop-streaming',
@@ -81,7 +81,7 @@ def hive(name, hivefile, src, dst, diff):
         action_on_failure='CANCEL_AND_WAIT',
         step_args= stepargs)
 
-def multipartlist(name, files, cmd, input, output, lines=1000,
+def multipartlist(name, files, cmd, input, output, lines=10000,
         debug=False, timeout=300000):
     stepargs = [
         'hadoop-streaming',
@@ -113,7 +113,7 @@ def objectcopy(name, files, cmd, input, output, rcmd,
         '-D', 'mapreduce.map.maxattempts=6',
         '-D', 'mapreduce.task.timeout=%i' % timeout,
         '-D', 'mapreduce.map.speculative=false',
-        '-D', 'mapreduce.job.reduces=1',
+        '-D', 'mapreduce.job.reduces=10',
         '-D', 'mapreduce.output.fileoutputformat.compress=true',
         '-D', 'mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.GzipCodec',
         '-D', 'mapreduce.input.lineinputformat.linespermap=%i' % lines,
