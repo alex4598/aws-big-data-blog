@@ -55,6 +55,7 @@ def main():
                 continue 
 
             print "%s\t%s\t%s\t%s" % (key.name.encode('utf-8'), 
+                    key.etag.replace("\"", ""),
                     key.size, parse_ts(key.last_modified))
 
             ## Log stats
