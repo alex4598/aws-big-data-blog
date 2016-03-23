@@ -4,6 +4,8 @@ import argparse
 import fileinput
 import os
 import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 ## Support for Streaming sandbox env
 sys.path.append(os.environ.get('PWD'))
@@ -52,7 +54,7 @@ def main():
             if key.storage_class == 'GLACIER':
                 continue 
 
-            print "%s\t%s\t%s\t%s" % (key.name, key.etag.replace("\"", ""), 
+            print "%s\t%s\t%s\t%s" % (key.name.encode('utf-8'), 
                     key.size, parse_ts(key.last_modified))
 
             ## Log stats
