@@ -86,12 +86,10 @@ def cli_chunksize(size, partcount):
 
     # Detect other special cases like s3n and Aspera
     if computedPartSize < minPartSize or computedPartSize > maxPartSize:
-        computedPartSize = 1 * CONSTANTS['MiB']
         for value in SPECIAL_PART_SIZES:
-            if computedPartSize >= value:
+            computedPartSize = value
+            if computedPartSize >= maxPartSize:
                 break
-            else:
-                computedPartSize = value
 
     # Detect if using 100MB increments
     if computedPartSize < minPartSize or computedPartSize > maxPartSize:
