@@ -111,12 +111,6 @@ def cli_chunksize(size, partcount):
         while computedPartSize < minPartSize and computedPartSize < 1 * CONSTANTS['GB']:
             computedPartSize += 5 * CONSTANTS['MB']
 
-    # Detect if using 1MB increments up to 100MB
-    if computedPartSize < minPartSize or computedPartSize > maxPartSize:
-        computedPartSize = 5 * CONSTANTS['MB']
-        while computedPartSize < minPartSize or computedPartSize < 100 * CONSTANTS['MB']:
-            computedPartSize += 1 * CONSTANTS['MB']
-
     partSize = computedPartSize
 
     if computedPartSize > maxPartSize:
