@@ -22,6 +22,7 @@ CONSTANTS = {
 }
 
 SPECIAL_PART_SIZES = [
+        5 * CONSTANTS['MB'],
         7 * CONSTANTS['MB'],
         67108536,
         134217696,
@@ -64,23 +65,18 @@ def random_sleep(maxsleep=5):
     sleep(randint(0,maxsleep))
 
 def cli_chunksize(size, partcount):
-    computedPartSize = CONSTANTS['MB'];
-    minPartSize = objectSize;
-    maxPartSize = MAX_SINGLE_UPLOAD_SIZE;
+    objectSize = size
+    computedPartSize = CONSTANTS['MB']
+    minPartSize = objectSize
+    maxPartSize = MAX_SINGLE_UPLOAD_SIZE
 
     if (partcount > 1):
-        minPartSize = Math.ceil(float(objectSize)/partcount);
-        maxPartSize = Math.floor(float(objectSize)/(partcount - 1))
+        minPartSize = int(math.ceil(float(objectSize)/partcount))
+        maxPartSize = int(math.floor(float(objectSize)/(partcount - 1)))
 
     # Detect using standard MB and the power of 2
     if computedPartSize < minPartSize or computedPartSize > maxPartSize:
-        computedPartSize = CONSTANTS['MB']
-        while (computedPartSize < minPartSize):
-            computedPartSize *= 2
-
-    # Detect using MiB notation and the power of 2
-    if computedPartSize < minPartSize or computedPartSize > maxPartSize:
-        computedPartSize = 1 * CONSTANTS['MiB']
+        computedPartSize = 8 * CONSTANTS['MB']
         while (computedPartSize < minPartSize):
             computedPartSize *= 2
 
@@ -88,7 +84,7 @@ def cli_chunksize(size, partcount):
     if computedPartSize < minPartSize or computedPartSize > maxPartSize:
         for value in SPECIAL_PART_SIZES:
             computedPartSize = value
-            if computedPartSize >= maxPartSize:
+            if computedPartSize >= minPartSize:
                 break
 
     # Detect if using 100MB increments
@@ -100,24 +96,30 @@ def cli_chunksize(size, partcount):
     # Detect if using 25MB increments up to 1GB
     if computedPartSize < minPartSize or computedPartSize > maxPartSize:
         computedPartSize = 25 * CONSTANTS['MB']
-        while computedPartSize < minPartSize or computedPartSize < 1 * MirrorConstants.GB:
+        while computedPartSize < minPartSize and computedPartSize < 1 * CONSTANTS['GB']:
             computedPartSize += 25 * CONSTANTS['MB']
 
     # Detect if using 10MB increments up to 1GB
     if computedPartSize < minPartSize or computedPartSize > maxPartSize:
         computedPartSize = 10 * CONSTANTS['MB']
-        while computedPartSize < minPartSize or computedPartSize < 1 * MirrorConstants.GB:
+        while computedPartSize < minPartSize and computedPartSize < 1 * CONSTANTS['GB']:
             computedPartSize += 10 * CONSTANTS['MB']
 
     # Detect if using 5MB increments up to 1GB
     if computedPartSize < minPartSize or computedPartSize > maxPartSize:
         computedPartSize = 5 * CONSTANTS['MB']
-        while computedPartSize < minPartSize or computedPartSize < 1 * MirrorConstants.GB:
+        while computedPartSize < minPartSize and computedPartSize < 1 * CONSTANTS['GB']:
             computedPartSize += 5 * CONSTANTS['MB']
+    
+    # Detect using MiB notation and the power of 2
+    if computedPartSize < minPartSize or computedPartSize > maxPartSize:
+        computedPartSize = 8 * CONSTANTS['MiB']
+        while (computedPartSize < minPartSize):
+            computedPartSize *= 2
 
     # Detect if using 1MB increments up to 100MB
     if computedPartSize < minPartSize or computedPartSize > maxPartSize:
-        computedPartSize = 1 * CONSTANTS['MB']
+        computedPartSize = 5 * CONSTANTS['MB']
         while computedPartSize < minPartSize or computedPartSize < 100 * CONSTANTS['MB']:
             computedPartSize += 1 * CONSTANTS['MB']
 
@@ -128,6 +130,7 @@ def cli_chunksize(size, partcount):
 
     if computedPartSize < MINIMUM_PART_SIZE:
         partSize = MINIMUM_PART_SIZE
+
     return partSize
 
 def stream_index():
