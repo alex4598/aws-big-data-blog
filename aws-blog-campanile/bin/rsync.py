@@ -142,7 +142,7 @@ def bucket_endpoint(conn, name):
         
     if location is '':
         return 's3.amazonaws.com'
-    if location is 'EU':
+    if location == 'EU':
         return 's3-eu-west-1.amazonaws.com'
     else:
         return "s3-%s.amazonaws.com" % location
