@@ -43,7 +43,7 @@ DEFAULT_AWS_SEC = 'default'
 # -----------------------------------------------------------------------------
 #  Functions
 # -----------------------------------------------------------------------------
-def bucketlist(name, files, cmd, input, output, lines=10,
+def bucketlist(name, files, cmd, input, output, lines=40,
         debug=False, timeout=300000):
     stepargs = [
         'hadoop-streaming',
@@ -81,7 +81,7 @@ def hive(name, hivefile, src, dst, diff):
         action_on_failure='CANCEL_AND_WAIT',
         step_args= stepargs)
 
-def multipartlist(name, files, cmd, input, output, lines=10000,
+def multipartlist(name, files, cmd, input, output, lines=40000,
         debug=False, timeout=300000):
     stepargs = [
         'hadoop-streaming',
@@ -106,7 +106,7 @@ def multipartlist(name, files, cmd, input, output, lines=10000,
             )
 
 def objectcopy(name, files, cmd, input, output, rcmd,
-        lines=10, debug=False, timeout=600000):
+        lines=1000, debug=False, timeout=600000):
     stepargs = [
         'hadoop-streaming',
         '-files', files,
