@@ -207,6 +207,11 @@ def main():
     rundir = "/%s" % uuid
     print "RunDir: hdfs://%s" % rundir
 
+    if args.profile:
+        profile_aws_access_key_id = boto.config.get('%s' % args.profile, 'aws_access_key_id', None)
+        profile_aws_secret_access_key = boto.config.get('%s' % args.profile, 'aws_secret_access_key', None)
+        profile_aws_session_token = boto.config.get('%s' % args.profile, 'aws_session_token', None)
+
     src_aws_access_key_id = boto.config.get('profile %s' % args.src_profile, 'aws_access_key_id', None)
     src_aws_secret_access_key = boto.config.get('profile %s' % args.src_profile, 'aws_secret_access_key', None)
     dst_aws_access_key_id = boto.config.get('profile %s' % args.dst_profile, 'aws_access_key_id', None)
@@ -339,8 +344,14 @@ def main():
         sys.exit(0)
 
     ## Run job
-    response = emr.connect_to_region(region,
-            profile_name=args.profile).add_jobflow_steps(args.job, jobsteps)
+    if args.profile:
+        response = emr.connect_to_region(region,
+                aws_access_key_id=profile_aws_access_key_id,
+                aws_secret_access_key=profile_aws_secret_access_key,
+                security_token=profile_aws_session_token).add_jobflow_steps(args.job, jobsteps)
+    else:
+        response = emr.connect_to_region(region,
+                ).add_jobflow_steps(args.job, jobsteps)
 
     for i in response.stepids:
         print "Added step %s" % i.value
